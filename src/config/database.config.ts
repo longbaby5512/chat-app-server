@@ -34,7 +34,7 @@ export class TypeOrmConfig {
   };
 
   static logging = (configService: ConfigService): LoggerOptions => {
-    return TypeOrmConfig.isProduction(configService) ? ["error", "warn"]: 'all';
+    return TypeOrmConfig.isProduction(configService) ? ["error", "warn", "migration"]: 'all';
   }
 }
 
