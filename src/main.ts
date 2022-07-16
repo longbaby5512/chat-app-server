@@ -31,7 +31,7 @@ async function bootstrap() {
 
   if (isProduction) {
     app.use(helmet.default());
-    app.use(compression.default());
+    app.use(compression());
   }
   await app
     .listen(port)

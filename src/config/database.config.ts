@@ -1,4 +1,5 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { LoggerOptions } from 'typeorm'
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
@@ -16,7 +17,7 @@ export class TypeOrmConfig {
       password: configService.get('DB_PASSWORD'),
       database: configService.get('DB_DATABASE'),
       entities: ['dist/**/*.entity{.ts,.js}'],
-      logging: 'all',
+      logging: TypeOrmConfig.logging(configService),
       migrations: ['dist/database/migrations/**/*{.ts,.js}'],
       migrationsRun: true,
       migrationsTableName: 'migrations',
@@ -31,6 +32,10 @@ export class TypeOrmConfig {
   static isProduction = (configService: ConfigService): boolean => {
     return configService.get('NODE_ENV') === 'production';
   };
+
+  static logging = (configService: ConfigService): LoggerOptions => {
+    return TypeOrmConfig.isProduction(configService) ? ["error", "warn"]: 'all';
+  }
 }
 
 export const databaseConfig: TypeOrmModuleAsyncOptions = {
