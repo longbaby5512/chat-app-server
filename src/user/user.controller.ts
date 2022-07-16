@@ -25,7 +25,6 @@ export class UserController {
       user.salt = undefined;
       const publicKey = user.key.publicKey;
       user.key = undefined;
-      user.publicKey = publicKey;
       user.informations = undefined;
     });
     return users.filter((user) => user.id !== currentUser.id);
@@ -62,7 +61,6 @@ export class UserController {
     throwNotFound(user, `User don't exists`);
     user.password = undefined;
     user.salt = undefined;
-    user.publicKey = user.key.publicKey;
     user.key = undefined;
     user.informations = undefined;
     return user;
