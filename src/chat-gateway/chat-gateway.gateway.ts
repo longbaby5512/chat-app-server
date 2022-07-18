@@ -57,11 +57,12 @@ export class ChatGateway
         socketId: client.id,
       };
       await this.informationService.create(info);
+      return true;
     } catch (ex) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
     finally {
-      return;
+      return false;
     }
 
     
@@ -73,11 +74,12 @@ export class ChatGateway
       Log.log(ChatGateway.name, id.toString())
       const user = await this.userService.findById(id);
       await this.informationService.deleteByValue(user.id, client.id);
+      return true
     } catch (ex) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
     finally {
-      return;
+      return false;
     }
   }
 
@@ -95,8 +97,8 @@ export class ChatGateway
     });
     Log.logObject(ChatGateway.name, socketIds)
     // Log.log(ChatGateway.name, `onMessgae: \n${JSON.stringify(data, null, 2)}`);
-    if (socketIds.length == 0) return;
+    if (socketIds.length == 0) return false;
     this.server.to(socketIds).emit('receive_message', data);
-    return;
+    return true;
   }
 }
