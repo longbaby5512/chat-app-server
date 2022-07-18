@@ -23,7 +23,6 @@ export class UserController {
     users.forEach((user) => {
       user.password = undefined;
       user.salt = undefined;
-      const publicKey = user.key.publicKey;
       user.key = undefined;
       user.informations = undefined;
     });
