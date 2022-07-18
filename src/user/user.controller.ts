@@ -1,9 +1,9 @@
 import {
-  Controller,
-  Get,
-  Param,
-  UseGuards
-  } from '@nestjs/common'
+    Controller,
+    Get,
+    Param,
+    UseGuards
+    } from '@nestjs/common'
 import { GetUser } from '../auth/decorators/get-user.decorator'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { JwtGuard } from '../auth/guards/jwt.guard'
@@ -23,6 +23,7 @@ export class UserController {
     users.forEach((user) => {
       user.password = undefined;
       user.salt = undefined;
+      user.publicKey = user.key.publicKey;
       user.key = undefined;
       user.informations = undefined;
     });
@@ -60,6 +61,7 @@ export class UserController {
     throwNotFound(user, `User don't exists`);
     user.password = undefined;
     user.salt = undefined;
+    user.publicKey = user.key.publicKey;
     user.key = undefined;
     user.informations = undefined;
     return user;
