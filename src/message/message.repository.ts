@@ -1,9 +1,9 @@
-import { CustomRepository } from '../database/typeorm-ex.decorator'
-import { Log } from '../common/logger'
-import { Message } from './entities/message.entity'
-import { MessageEntity } from './serializers/message.serializer'
-import { ModelRepository } from '../base/model.repostitory'
-import { NotFoundException } from '@nestjs/common'
+import { CustomRepository } from '../database/typeorm-ex.decorator';
+import { Log } from '../common/logger';
+import { Message } from './entities/message.entity';
+import { MessageEntity } from './serializers/message.serializer';
+import { ModelRepository } from '../base/model.repostitory';
+import { NotFoundException } from '@nestjs/common';
 
 @CustomRepository(Message)
 export class MessageRepository extends ModelRepository<Message, MessageEntity> {

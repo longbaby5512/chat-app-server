@@ -1,4 +1,6 @@
 import { AuthPayload } from '../auth/interfaces/auth-payload.interface'
+import { GetMessage } from './decorators/get-message.decorator'
+import { getMessageType } from '../message/interfaces/message.interface'
 import { HttpException, HttpStatus, UseGuards } from '@nestjs/common'
 import { InformationService } from '../information/information.service'
 import { JwtService } from '@nestjs/jwt'
@@ -45,44 +47,56 @@ export class ChatGateway
     );
   }
   async handleConnection(client: Socket, ...args: any[]) {
-    Log.log(ChatGateway.name, `Client connected: ${client.id}`);
-    const user = await this.getDataUserFromToken(client);
-    const info: SaveInformationDto = {
-      userId: user.id,
-      socketId: client.id,
-    };
-    await this.informationService.create(info);
+    const authToken: any = client.handshake.query.token;
+    try {
+      const id: number = this.jwtService.verify(authToken).id;
+      Log.log(ChatGateway.name, id.toString())
+      const user = await this.userService.findById(id);
+      const info: SaveInformationDto = {
+        userId: user.id,
+        socketId: client.id,
+      };
+      await this.informationService.create(info);
+    } catch (ex) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+    finally {
+      return;
+    }
+
+    
   }
   async handleDisconnect(client: Socket) {
-    Log.log(ChatGateway.name, `Client disconnected: ${client.id}`);
-    const user = await this.getDataUserFromToken(client);
-    await this.informationService.deleteByValue(user.id, client.id);
+    const authToken: any = client.handshake.query.token;
+    try {
+      const id: number = this.jwtService.verify(authToken).id;
+      Log.log(ChatGateway.name, id.toString())
+      const user = await this.userService.findById(id);
+      await this.informationService.deleteByValue(user.id, client.id);
+    } catch (ex) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    }
+    finally {
+      return;
+    }
   }
 
   @SubscribeMessage('send_message')
-  async onMessage(client: Socket, @MessageBody() data: SendMessageDto) {
-    // Log.log(ChatGateway.name, `onMessgae: \n${JSON.stringify(data, null, 2)}`);
+  async onMessage(client: Socket, @GetMessage() data: SendMessageDto) {
+
+    Log.logObject(ChatGateway.name, data);
+
     await this.messageService.create(data);
-    // Log.log(ChatGateway.name, `onMessgae: \n${JSON.stringify(data, null, 2)}`);
 
     const socketIds = (
       await this.informationService.findSocketId([data.to])
     ).map((info) => {
       return info.socketId;
     });
+    Log.logObject(ChatGateway.name, socketIds)
     // Log.log(ChatGateway.name, `onMessgae: \n${JSON.stringify(data, null, 2)}`);
-
+    if (socketIds.length == 0) return;
     this.server.to(socketIds).emit('receive_message', data);
     return;
-  }
-
-  async getDataUserFromToken(client: Socket) {
-    const authToken: any = client.handshake.query.token;
-    try {
-      const decoded: AuthPayload = this.jwtService.verify(authToken);
-      return await this.userService.findById(decoded.id); // response to function
-    } catch (ex) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-    }
   }
 }

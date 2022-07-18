@@ -1,10 +1,10 @@
-import { CustomRepository } from '../database/typeorm-ex.decorator'
-import { instanceToPlain, plainToClass } from 'class-transformer'
-import { Log } from '../common/logger'
-import { ModelRepository } from '../base/model.repostitory'
-import { NotFoundException } from '@nestjs/common'
-import { User } from './entities/user.entity'
-import { UserEntity } from './serializers/user.serializer'
+import { CustomRepository } from '../database/typeorm-ex.decorator';
+import { instanceToPlain, plainToClass } from 'class-transformer';
+import { Log } from '../common/logger';
+import { ModelRepository } from '../base/model.repostitory';
+import { NotFoundException } from '@nestjs/common';
+import { User } from './entities/user.entity';
+import { UserEntity } from './serializers/user.serializer';
 
 @CustomRepository(User)
 export class UserRepository extends ModelRepository<User, UserEntity> {

@@ -1,5 +1,5 @@
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { LoggerOptions } from 'typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { LoggerOptions } from 'typeorm';
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
@@ -34,8 +34,10 @@ export class TypeOrmConfig {
   };
 
   static logging = (configService: ConfigService): LoggerOptions => {
-    return TypeOrmConfig.isProduction(configService) ? ["error", "warn", "migration"]: 'all';
-  }
+    return TypeOrmConfig.isProduction(configService)
+      ? ['error', 'warn', 'migration']
+      : 'all';
+  };
 }
 
 export const databaseConfig: TypeOrmModuleAsyncOptions = {

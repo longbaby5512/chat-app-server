@@ -1,6 +1,6 @@
-import { InformationService } from './information.service'
-import { SaveInformationDto } from './dto/save.dto'
-import { throwNotFound } from '../common/utils'
+import { InformationService } from './information.service';
+import { SaveInformationDto } from './dto/save.dto';
+import { throwNotFound } from '../common/utils';
 import {
   Body,
   Controller,

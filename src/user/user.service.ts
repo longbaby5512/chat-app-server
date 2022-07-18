@@ -1,10 +1,10 @@
-import { CreateUserDto } from './dto/create-user.dto'
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Log } from '../common/logger'
-import { User } from './entities/user.entity'
-import { UserEntity } from './serializers/user.serializer'
-import { UserRepository } from './user.repository'
+import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Log } from '../common/logger';
+import { User } from './entities/user.entity';
+import { UserEntity } from './serializers/user.serializer';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {

@@ -1,4 +1,4 @@
-import { MessageType } from '../interfaces/message.interface';
+import { MessageType } from '../interfaces/message.interface'
 import {
   IsEnum,
   IsNotEmpty,
@@ -8,9 +8,9 @@ import {
 } from 'class-validator';
 
 export class SendMessageDto {
-  @IsNumber()
-  @IsNotEmpty()
-  from: number;
+@IsNumber()
+@IsNotEmpty()
+from: number
 
   @IsNumber()
   @IsNotEmpty()
@@ -23,7 +23,4 @@ export class SendMessageDto {
   @IsEnum(MessageType)
   @IsOptional()
   type?: MessageType;
-
-  @IsString()
-  publicKey: String;
 }

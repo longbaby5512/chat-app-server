@@ -1,16 +1,11 @@
-import {
-    Controller,
-    Get,
-    Param,
-    UseGuards
-    } from '@nestjs/common'
-import { GetUser } from '../auth/decorators/get-user.decorator'
-import { HttpException, HttpStatus } from '@nestjs/common'
-import { JwtGuard } from '../auth/guards/jwt.guard'
-import { Log } from '../common/logger'
-import { throwNotFound } from '../common/utils'
-import { UserEntity } from './serializers/user.serializer'
-import { UserService } from './user.service'
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { Log } from '../common/logger';
+import { throwNotFound } from '../common/utils';
+import { UserEntity } from './serializers/user.serializer';
+import { UserService } from './user.service';
 
 @UseGuards(JwtGuard)
 @Controller('user')
