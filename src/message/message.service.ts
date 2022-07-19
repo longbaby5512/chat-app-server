@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { MessageRepository } from './message.repository'
-import { SendMessageDto } from './dto/send-message.dto'
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MessageRepository } from './message.repository';
+import { SendMessageDto } from './dto/send-message.dto';
 
 @Injectable()
 export class MessageService {
@@ -26,7 +26,8 @@ export class MessageService {
     userId1: number,
     userId2: number,
     relations?: string[],
-    throws?: boolean) {
+    throws?: boolean,
+  ) {
     return await this.messageRepository.findAllMessageBeetweenTwoUser(
       userId1,
       userId2,

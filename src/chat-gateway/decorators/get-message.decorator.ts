@@ -1,5 +1,5 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common'
-import { SendMessageDto } from '../../message/dto/send-message.dto'
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { SendMessageDto } from '../../message/dto/send-message.dto';
 
 //Get data from switchToWs
 export const GetMessage = createParamDecorator(
@@ -12,5 +12,5 @@ export const GetMessage = createParamDecorator(
       type: data.type,
     };
     return message;
-  }
+  },
 );
