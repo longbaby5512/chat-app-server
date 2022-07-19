@@ -1,4 +1,4 @@
-import { IMessage, MessageType } from '../interfaces/message.interface';
+import { IMessage, MessageType } from '../interfaces/message.interface'
 import {
   Column,
   CreateDateColumn,
@@ -37,7 +37,7 @@ export class Message implements IMessage {
   type: MessageType;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   timestamp: number;

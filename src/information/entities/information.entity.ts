@@ -1,5 +1,5 @@
-import { IInformation } from '../interfaces/information.interface';
-import { User } from '../../user/entities/user.entity';
+import { IInformation } from '../interfaces/information.interface'
+import { User } from '../../user/entities/user.entity'
 import {
   BeforeUpdate,
   Column,
@@ -32,14 +32,14 @@ export class Information implements IInformation {
   socketId: string;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
     name: 'created_at',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
+    type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
     name: 'updated_at',
   })
