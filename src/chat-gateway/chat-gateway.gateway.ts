@@ -99,6 +99,6 @@ export class ChatGateway
     // Log.log(ChatGateway.name, `onMessgae: \n${JSON.stringify(data, null, 2)}`);
     if (socketIds.length == 0) return false;
     this.server.to(socketIds).emit('receive_message', data);
-    return true;
+    return data;
   }
 }
