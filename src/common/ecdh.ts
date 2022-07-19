@@ -1,11 +1,11 @@
-import { createECDH, createHash, ECDH } from 'crypto';
-import { Key } from '../user/interfaces/key.interface';
+import { createECDH, createHash, ECDH } from 'crypto'
+import { Key } from '../user/interfaces/key.interface'
 
 export class ECDHService {
   private readonly ecdh: ECDH;
 
   constructor() {
-    this.ecdh = createECDH('secp521r1');
+    this.ecdh = createECDH('secp256k1');
   }
 
   generateKeys(): Key {
@@ -17,7 +17,7 @@ export class ECDHService {
   }
 
   static generateSharedSecret(ourPrivateKey: string, theirPublicKey: string) {
-    const ecdh = createECDH('secp521r1');
+    const ecdh = createECDH('secp256k1');
     ecdh.setPrivateKey(Buffer.from(ourPrivateKey, 'hex'));
     return ecdh
       .computeSecret(Buffer.from(theirPublicKey, 'hex'))
