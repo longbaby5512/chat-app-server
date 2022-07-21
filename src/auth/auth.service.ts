@@ -10,21 +10,20 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { PostgresErrorCode } from '../database/error/postgres-error-code';
 import { throwNotFound, verifyPassword } from '../common/utils';
 import { UserService } from '../user/user.service';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async register(inputs: CreateUserDto) {
     const email = inputs.email.toLowerCase().trim();
     const name = inputs.name;
     const { hash: hashPass, salt } = await Hashing.hash(inputs.password);
-    const ecdh = new ECDHService();
-    const key = ecdh.generateKeys();
-    const create = { name, email, password: hashPass, salt, key };
+    const create = { name, email, password: hashPass, salt };
     try {
       const user = await this.userService.create(create);
       Log.log(AuthService.name, `User ${user.email} created`);
@@ -58,6 +57,18 @@ export class AuthService {
       hash: user.password,
       salt: user.salt,
     });
+    if (!user.key) {
+      const updateUser: User = {
+        id: user.id,
+        key: inputs.key,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        salt: user.salt,
+        informations: user.informations,
+      };
+      return await this.userService.update(user, updateUser);
+    }
     Log.log(AuthService.name, `User ${user.email} signed in`);
     return user;
   }

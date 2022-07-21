@@ -42,11 +42,12 @@ export class User implements IUser {
   @Column({
     name: 'key',
     type: 'jsonb',
+    nullable: true,
+    default: null,
   })
   key: Key;
 
   @OneToMany(() => Information, (information) => information.user, {
-    cascade: true,
     eager: true,
   })
   informations: Information[];

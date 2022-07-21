@@ -10,6 +10,7 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -22,6 +23,7 @@ export class Information implements IInformation {
     nullable: true,
     name: 'user_id',
   })
+  @RelationId((information: Information) => information.user)
   @Index()
   userId: number;
 
@@ -45,7 +47,11 @@ export class Information implements IInformation {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.informations)
+  @ManyToOne(() => User, (user) => user.informations, {
+    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

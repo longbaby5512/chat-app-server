@@ -31,6 +31,7 @@ export class UserService {
   }
 
   async update(user: UserEntity, inputs: User) {
+    Object.assign(user, inputs);
     return await this.userRepository.updateEntity(user, inputs);
   }
 

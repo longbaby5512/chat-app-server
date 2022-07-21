@@ -8,7 +8,7 @@ import {
   Post,
   Query,
   UseGuards
-  } from '@nestjs/common'
+} from '@nestjs/common'
 import { CreateUserDto } from '../user/dto/create-user.dto'
 import { ECDHService } from '../common/ecdh'
 import { GetUser } from './decorators/get-user.decorator'
@@ -20,7 +20,7 @@ import { UserEntity } from '../user/serializers/user.serializer'
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('register')
   async register(@Body() inputs: CreateUserDto) {
@@ -34,6 +34,7 @@ export class AuthController {
     const token = await this.authService.generateToken(user.id);
     user.password = undefined;
     user.salt = undefined;
+    user.informations = undefined;
     return { ...user, token };
   }
 

@@ -6,7 +6,7 @@ import { plainToClass } from 'class-transformer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @Injectable()
-export class ModelRepository<
+export abstract class ModelRepository<
   T extends { id: number },
   K extends ModelEntity,
 > extends Repository<T> {

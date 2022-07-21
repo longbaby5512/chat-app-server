@@ -5,6 +5,7 @@ import { ModelRepository } from '../base/model.repostitory';
 import { NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { UserEntity } from './serializers/user.serializer';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 @CustomRepository(User)
 export class UserRepository extends ModelRepository<User, UserEntity> {
@@ -16,6 +17,29 @@ export class UserRepository extends ModelRepository<User, UserEntity> {
         }
         // Log.logObject(UserRepository.name, entity);
         return Promise.resolve(entity ? this.transform(entity) : null);
+      })
+      .catch((error) => Promise.reject(error));
+  }
+
+  override async updateEntity(user: UserEntity, inputs: User) {
+    return await this.createQueryBuilder()
+      .innerJoinAndMapMany(
+        'users.infomations',
+        'infomations',
+        'infomations.user_id = users.id',
+      )
+      .update(User)
+      .set({
+        name: inputs.name,
+        email: inputs.email,
+        password: inputs.password,
+        salt: inputs.salt,
+        key: inputs.key,
+      })
+      .where('id = :id', { id: user.id })
+      .execute()
+      .then(async (model: any) => {
+        return await this.findEntityById(model.id);
       })
       .catch((error) => Promise.reject(error));
   }
