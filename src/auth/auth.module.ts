@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmExModule } from '../database/typeorm-ex.module';
 import { UserModule } from '../user/user.module';
 import { UserRepository } from '../user/user.repository';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { UserRepository } from '../user/user.repository';
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
 })
 export class AuthModule {}

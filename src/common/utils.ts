@@ -1,4 +1,4 @@
-import { Hashing, SaltedHash } from './hash';
+import { Hashing } from './hash';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 const throwNotFound = <T>(value: T, res: string) => {
@@ -7,9 +7,8 @@ const throwNotFound = <T>(value: T, res: string) => {
   }
 };
 
-const verifyPassword = async (password: string, saltedHash: SaltedHash) => {
-  const { hash, salt } = saltedHash;
-  const isValid = await Hashing.compare(password, { hash, salt });
+const verifyPassword = async (password: string, hashPassword: string) => {
+  const isValid = await Hashing.comparing(password, hashPassword);
   if (!isValid) {
     throw new HttpException(
       'Email or password incorrect',

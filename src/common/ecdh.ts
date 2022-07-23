@@ -1,6 +1,6 @@
 import { getCurves } from 'crypto';
-import { createECDH, createHash, ECDH } from 'crypto'
-import { Key } from '../user/interfaces/key.interface'
+import { createECDH, createHash, ECDH } from 'crypto';
+import { Key } from '../user/interfaces/key.interface';
 import { Log } from './logger';
 
 export class ECDHService {
@@ -24,7 +24,7 @@ export class ECDHService {
   static generateSharedSecret(ourPrivateKey: string, theirPublicKey: string) {
     const ecdh = createECDH('secp256k1');
     ecdh.setPrivateKey(Buffer.from(ourPrivateKey, 'base64url'));
-    return ecdh.computeSecret(theirPublicKey, 'base64url', 'base64url')
+    return ecdh.computeSecret(theirPublicKey, 'base64url', 'base64url');
   }
 
   static generateFinalKey(

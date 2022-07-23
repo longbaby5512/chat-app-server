@@ -1,4 +1,4 @@
-import { IMessage, MessageType } from '../interfaces/message.interface'
+import { IMessage, MessageType } from '../interfaces/message.interface';
 import {
   Column,
   CreateDateColumn,

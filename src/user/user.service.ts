@@ -1,4 +1,3 @@
-import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Log } from '../common/logger';
@@ -31,7 +30,6 @@ export class UserService {
   }
 
   async update(user: UserEntity, inputs: User) {
-    Object.assign(user, inputs);
     return await this.userRepository.updateEntity(user, inputs);
   }
 
