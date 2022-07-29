@@ -18,9 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(req: Request, email: string, password: string) {
-    Log.logObject(AuthService.name, req.body);
     const key = JSON.parse(JSON.stringify(req.body)).key as Key;
-    Log.logObject(AuthService.name, key);
     const inputs: LoginUserDto = { email, password, key };
     return await this.authService.login(inputs);
   }

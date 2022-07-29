@@ -4,5 +4,10 @@ export interface IUser {
   name: Nullable<string>;
   email: string;
   password: string;
-  salt: string;
+}
+
+export enum UserCreateType {
+  Email = 'email',
+  Google = 'google',
+  Facebook = 'facebook',
 }

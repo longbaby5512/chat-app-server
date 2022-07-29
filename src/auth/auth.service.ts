@@ -1,29 +1,30 @@
 import { AuthPayload } from './interfaces/auth-payload.interface';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { ECDHService } from '../common/ecdh';
 import { Hashing } from '../common/hash';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Key } from '../user/interfaces/key.interface';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { Log } from '../common/logger';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { PostgresErrorCode } from '../database/error/postgres-error-code';
 import { throwNotFound, verifyPassword } from '../common/utils';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { UserEntity } from '../user/serializers/user.serializer';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-  ) { }
+    private readonly configService: ConfigService,
+  ) {}
 
   async register(inputs: CreateUserDto) {
     const email = inputs.email.toLowerCase().trim();
     const name = inputs.name;
-    const { hash: hashPass, salt } = await Hashing.hash(inputs.password);
-    const create = { name, email, password: hashPass, salt };
+    const hashPassword = await Hashing.hashing(inputs.password, email);
+    const create = { name, email, password: hashPassword };
     try {
       const user = await this.userService.create(create);
       Log.log(AuthService.name, `User ${user.email} created`);
@@ -51,26 +52,62 @@ export class AuthService {
   async login(inputs: LoginUserDto) {
     const email = inputs.email.toLowerCase().trim();
     const user = await this.userService.findByEmail(email);
-    Log.logObject(AuthService.name, user);
     throwNotFound(user, `Email ${email} not found`);
-    await verifyPassword(inputs.password, {
-      hash: user.password,
-      salt: user.salt,
-    });
-    if (!user.key) {
-      const updateUser: User = {
-        id: user.id,
-        key: inputs.key,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        salt: user.salt,
-        informations: user.informations,
-      };
-      return await this.userService.update(user, updateUser);
-    }
+    await verifyPassword(inputs.password, user.password);
+    const refreshToken = await this.generateRefreshToken(user.id);
+    const refreshTokenHash = await Hashing.hashing(refreshToken, email);
+    Log.logObject(AuthService.name, user);
+    const key = user.key || inputs.key;
+
     Log.log(AuthService.name, `User ${user.email} signed in`);
-    return user;
+    const res = await this.userService.update(user, {
+      id: user.id,
+      key,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      informations: user.informations,
+      refreshToken: refreshTokenHash,
+    });
+    res.refreshToken = refreshToken;
+    Log.logObject(AuthService.name, res);
+    return res;
+  }
+
+  async logout(user: UserEntity) {
+    const updateUser: User = {
+      id: user.id,
+      key: user.key,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      informations: user.informations,
+      refreshToken: null,
+    };
+    Log.log(AuthService.name, `User ${user.email} signed out`);
+    return await this.userService.update(user, updateUser);
+  }
+
+  async refreshToken(user: UserEntity) {
+    const refreshToken = await this.generateRefreshToken(user.id);
+    const token = await this.generateToken(user.id);
+
+    const refreshTokenHash = await Hashing.hashing(refreshToken, user.email);
+    const updateUser: User = {
+      id: user.id,
+      key: user.key,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      refreshToken: refreshTokenHash,
+    };
+    Log.log(AuthService.name, `User ${user.email} refreshed`);
+    const res = await this.userService.update(user, updateUser);
+    res.refreshToken = refreshToken;
+    return {
+      ...res,
+      token,
+    };
   }
 
   async validateUser(payload: AuthPayload) {
@@ -82,5 +119,15 @@ export class AuthService {
   async generateToken(userId: number) {
     const payload = { id: userId };
     return await this.jwtService.signAsync(payload);
+  }
+
+  async generateRefreshToken(userId: number) {
+    const payload = { id: userId };
+    const options: JwtSignOptions = {
+      expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN'),
+      algorithm: this.configService.get('JWT_ALGORITHM'),
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    };
+    return await this.jwtService.signAsync(payload, options);
   }
 }

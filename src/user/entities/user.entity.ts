@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Information } from '../../information/entities/information.entity';
-import { IUser } from '../interfaces/user.interface';
+import { IUser, UserCreateType } from '../interfaces/user.interface';
 import { Key } from '../interfaces/key.interface';
 import {
   Column,
@@ -27,17 +27,10 @@ export class User implements IUser {
 
   @Column({
     type: 'text',
-    nullable: false,
+    nullable: true,
   })
   @Exclude()
   password: string;
-
-  @Column({
-    type: 'text',
-    nullable: false,
-  })
-  @Exclude()
-  salt: string;
 
   @Column({
     name: 'key',
@@ -50,5 +43,13 @@ export class User implements IUser {
   @OneToMany(() => Information, (information) => information.user, {
     eager: true,
   })
-  informations: Information[];
+  informations?: Information[];
+
+  @Column({
+    name: 'refresh_token',
+    type: 'text',
+    nullable: true,
+  })
+  @Exclude()
+  refreshToken?: string;
 }

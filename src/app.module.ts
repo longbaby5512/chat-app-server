@@ -26,6 +26,8 @@ import { ChatGatewayModule } from './chat-gateway/chat-gateway.module';
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.number().required(),
         JWT_ALGORITHM: Joi.string().default('HS256'),
+        JWT_REFRESH_SECRET: Joi.string().required(),
+        JWT_REFRESH_EXPIRES_IN: Joi.number().required(),
       }),
     }),
     TypeOrmModule.forRootAsync(databaseConfig),

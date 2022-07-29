@@ -31,7 +31,6 @@ export class UserController {
 
     throwNotFound(user, `User don't exists`);
     user.password = undefined;
-    user.salt = undefined;
     user.publicKey = user.key.publicKey;
     user.key = undefined;
     user.informations = undefined;
@@ -42,7 +41,6 @@ export class UserController {
     const users = await this.userService.findAll();
     users.forEach((user) => {
       user.password = undefined;
-      user.salt = undefined;
       user.publicKey = user.key.publicKey;
       user.key = undefined;
       user.informations = undefined;
