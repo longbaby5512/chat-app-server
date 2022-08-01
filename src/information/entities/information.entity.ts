@@ -1,14 +1,12 @@
 import { IInformation } from '../interfaces/information.interface';
 import { User } from '../../user/entities/user.entity';
 import {
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   RelationId,
   UpdateDateColumn,

@@ -1,5 +1,6 @@
 import { ChatGateway } from './chat-gateway.gateway';
 import { ConfigModule } from '@nestjs/config';
+import { ConversationModule } from '../conversation/conversation.module';
 import { InformationModule } from '../information/information.module';
 import { jwtConfig } from '../config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
@@ -14,6 +15,7 @@ import { UserModule } from '../user/user.module';
     JwtModule.registerAsync(jwtConfig),
     MessageModule,
     InformationModule,
+    ConversationModule,
   ],
   providers: [ChatGateway],
 })

@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
 import { InformationModule } from './information/information.module';
 import { ChatGatewayModule } from './chat-gateway/chat-gateway.module';
+import { ConversationModule } from './conversation/conversation.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ChatGatewayModule } from './chat-gateway/chat-gateway.module';
     MessageModule,
     InformationModule,
     ChatGatewayModule,
+    ConversationModule,
   ],
 })
 export class AppModule {}

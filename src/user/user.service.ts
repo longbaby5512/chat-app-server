@@ -24,6 +24,11 @@ export class UserService {
     return await this.userRepository.findByEmail(email, relations, throws);
   }
 
+  async findNameById(id: number) {
+    const user = await this.findById(id);
+    return user.name;
+  }
+
   async create(inputs: any) {
     // Log.logObject(UserService.name, inputs);
     return await this.userRepository.createEntity(inputs);

@@ -1,3 +1,4 @@
+import { Conversation } from '../../conversation/entities/conversation.entity';
 import { Exclude } from 'class-transformer';
 import { Information } from '../../information/entities/information.entity';
 import { IUser, UserCreateType } from '../interfaces/user.interface';
@@ -44,6 +45,9 @@ export class User implements IUser {
     eager: true,
   })
   informations?: Information[];
+
+  @OneToMany(() => Conversation, (conversation) => conversation.user)
+  conversations?: Conversation[];
 
   @Column({
     name: 'refresh_token',

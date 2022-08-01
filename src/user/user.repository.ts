@@ -27,6 +27,11 @@ export class UserRepository extends ModelRepository<User, UserEntity> {
         'infomations',
         'infomations.user_id = users.id',
       )
+      .innerJoinAndMapMany(
+        'users.conversations',
+        'conversations',
+        'conversations.user_id = users.id',
+      )
       .update(User)
       .set({
         name: inputs.name,

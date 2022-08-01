@@ -40,5 +40,5 @@ export class Message implements IMessage {
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  timestamp: number;
+  timestamp: Date;
 }

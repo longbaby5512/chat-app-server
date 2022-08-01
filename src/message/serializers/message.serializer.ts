@@ -7,5 +7,5 @@ export class MessageEntity extends ModelEntity implements IMessage {
   to: number;
   content: string;
   type: MessageType;
-  timestamp: number;
+  timestamp: Date;
 }
