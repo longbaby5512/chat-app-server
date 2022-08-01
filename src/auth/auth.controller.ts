@@ -20,7 +20,10 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { UserEntity } from '../user/serializers/user.serializer';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
-@Controller()
+@Controller({
+  version: '1',
+  path: 'auth',
+})
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

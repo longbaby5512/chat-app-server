@@ -8,43 +8,50 @@ import { UserEntity } from './serializers/user.serializer';
 import { UserService } from './user.service';
 
 @UseGuards(JwtGuard)
-@Controller('user')
+@Controller({
+  version: '1',
+  path: 'user',
+})
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async find(
-    @GetUser() currentUser: UserEntity,
-    @Query() query: { id: number; email: string },
-  ) {
-    if (!query.id && !query.email) {
-      return this.findAll(currentUser);
-    }
-
-    let user: UserEntity;
-    if (query.id) {
-      user = await this.userService.findById(query.id);
-    }
-    if (query.email) {
-      user = await this.userService.findByEmail(query.email);
-    }
-
-    throwNotFound(user, `User don't exists`);
-    user.password = undefined;
-    user.publicKey = user.key.publicKey;
-    user.key = undefined;
-    user.informations = undefined;
-    return user;
-  }
-
-  async findAll(currentUser: UserEntity) {
+  async findAll(@GetUser() currentUser: UserEntity) {
     const users = await this.userService.findAll();
     users.forEach((user) => {
       user.password = undefined;
       user.publicKey = user.key.publicKey;
       user.key = undefined;
       user.informations = undefined;
+      user.refreshToken = undefined;
+      user.createType = undefined;
     });
     return users.filter((user) => user.id !== currentUser.id);
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    const user = await this.userService.findById(id);
+    throwNotFound(user, 'User not found');
+    user.password = undefined;
+    user.publicKey = user.key.publicKey;
+    user.key = undefined;
+    user.informations = undefined;
+    user.refreshToken = undefined;
+    user.createType = undefined;
+    return user;
+  }
+
+  @Get('email/:email')
+  async findByEmail(@Param('email') email: string) {
+    const user = await this.userService.findByEmail(email);
+    throwNotFound(user, 'User not found');
+    user.password = undefined;
+    user.publicKey = user.key.publicKey;
+    user.key = undefined;
+    user.informations = undefined;
+    user.refreshToken = undefined;
+    user.createType = undefined;
+    return user;
   }
 }

@@ -14,6 +14,7 @@ async function bootstrap() {
   const port: number = configService.get<number>('PORT');
   const isProduction = configService.get<string>('NODE_ENV') === 'production';
   app.enableCors();
+  app.enableVersioning();
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
