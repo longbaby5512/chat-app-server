@@ -1,14 +1,12 @@
 import { Exclude } from 'class-transformer';
 import { Information } from '../../information/entities/information.entity';
-import { IUser, UserCreateType } from '../interfaces/user.interface';
+import { IUser } from '../interfaces/user.interface';
 import { Key } from '../interfaces/key.interface';
 import {
   Column,
   Entity,
   Index,
-  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 

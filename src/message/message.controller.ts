@@ -5,21 +5,22 @@ import { MessageService } from './message.service';
 import { UserEntity } from '../user/serializers/user.serializer';
 
 @UseGuards(JwtGuard)
-@Controller('message')
+@Controller({
+  version: '1',
+  path: 'message',
+})
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Get()
+  @Get(':id')
   async findAllMessageBeetweenTwoUser(
-    @Query('id') id: number,
+    @Param('id') id: number,
     @GetUser() user: UserEntity,
   ) {
-    if (!id) {
-      return await this.findAllMessagesByUserId(user);
-    }
     return await this.messageService.findAllMessageBeetweenTwoUser(id, user.id);
   }
 
+  @Get()
   async findAllMessagesByUserId(user: UserEntity) {
     return await this.messageService.findAllMessagesByUserId(user.id);
   }

@@ -12,7 +12,10 @@ import {
   Put,
 } from '@nestjs/common';
 
-@Controller('information')
+@Controller({
+  version: '1',
+  path: 'information',
+})
 export class InformationController {
   constructor(private readonly informationService: InformationService) {}
 

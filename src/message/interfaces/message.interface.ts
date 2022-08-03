@@ -4,7 +4,7 @@ export interface IMessage {
   to: number;
   content: string;
   type: MessageType;
-  timestamp: number;
+  timestamp: Date;
 }
 
 export enum MessageType {

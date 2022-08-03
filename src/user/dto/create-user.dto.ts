@@ -1,9 +1,11 @@
+import { Key } from '../interfaces/key.interface'
 import {
   IsEmail,
   IsNotEmpty,
   IsString,
+  Matches,
   MaxLength,
-  MinLength,
+  ValidateNested,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -18,6 +20,10 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty()
-  @MinLength(8)
+  @Matches('^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?-@^_`|~]).{8,}$')
   password: string;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  key: Key;
 }

@@ -1,4 +1,13 @@
 import { AuthService } from './auth.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { ECDHService } from '../common/ecdh';
+import { GetUser } from './decorators/get-user.decorator';
+import { JwtGuard } from './guards/jwt.guard';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { LocalGuard } from './guards/local.guard';
+import { Log } from '../common/logger';
+import { LoginUserDto } from '../user/dto/login-user.dto';
+import { UserEntity } from '../user/serializers/user.serializer';
 import {
   Body,
   Controller,
@@ -7,26 +16,20 @@ import {
   HttpException,
   HttpStatus,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { ECDHService } from '../common/ecdh';
-import { GetUser } from './decorators/get-user.decorator';
-import { JwtGuard } from './guards/jwt.guard';
-import { LocalGuard } from './guards/local.guard';
-import { Log } from '../common/logger';
-import { LoginUserDto } from '../user/dto/login-user.dto';
-import { UserEntity } from '../user/serializers/user.serializer';
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
-@Controller()
+@Controller({
+  version: '1',
+  path: 'auth',
+})
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   async register(@Body() inputs: CreateUserDto) {
-    return await this.authService.register(inputs);
+    Log.logObject(AuthController.name, inputs);
+    await this.authService.register(inputs);
   }
 
   @UseGuards(LocalGuard)
@@ -61,6 +64,10 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(@GetUser() user: UserEntity) {
-    return await this.authService.refreshToken(user);
+    const res = await this.authService.refreshToken(user);
+    res.createType = undefined;
+    res.informations = undefined;
+    res.password = undefined;
+    return res;
   }
 }

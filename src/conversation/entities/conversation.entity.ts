@@ -1,28 +1,30 @@
-import { IMessage, MessageType } from '../interfaces/message.interface';
+import { IConversation } from '../interfaces/conversation.interface';
+import { MessageType } from '../../message/interfaces/message.interface';
+import { User } from '../../user/entities/user.entity';
 import {
   Column,
-  CreateDateColumn,
   Entity,
-  Index,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('messages')
-export class Message implements IMessage {
+@Entity('conversations')
+export class Conversation implements IConversation {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column({
+    name: 'user_id',
     nullable: false,
   })
-  @Index()
-  from: number;
+  userId: number;
 
   @Column({
+    name: 'to_user_id',
     nullable: false,
   })
-  @Index()
-  to: number;
+  toUserId: number;
 
   @Column({
     nullable: false,
@@ -36,7 +38,8 @@ export class Message implements IMessage {
   })
   type: MessageType;
 
-  @CreateDateColumn({
+  @Column({
+    nullable: false,
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })

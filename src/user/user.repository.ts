@@ -1,9 +1,9 @@
 import { CustomRepository } from '../database/typeorm-ex.decorator';
+import { Log } from '../common/logger';
 import { ModelRepository } from '../base/model.repostitory';
 import { NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { UserEntity } from './serializers/user.serializer';
-import { Log } from '../common/logger';
 
 @CustomRepository(User)
 export class UserRepository extends ModelRepository<User, UserEntity> {
@@ -27,6 +27,11 @@ export class UserRepository extends ModelRepository<User, UserEntity> {
         'infomations',
         'infomations.user_id = users.id',
       )
+      .innerJoinAndMapMany(
+        'users.conversations',
+        'conversations',
+        'conversations.user_id = users.id',
+      )
       .update(User)
       .set({
         name: inputs.name,
@@ -37,7 +42,7 @@ export class UserRepository extends ModelRepository<User, UserEntity> {
       })
       .where('id = :id', { id: user.id })
       .execute()
-      .then(async (model: any) => {
+      .then(async () => {
         return await this.findEntityById(user.id);
       })
       .catch((error) => Promise.reject(error));
