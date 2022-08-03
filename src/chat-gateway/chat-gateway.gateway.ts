@@ -1,8 +1,6 @@
-import { AuthPayload } from '../auth/interfaces/auth-payload.interface'
 import { ConversationService } from '../conversation/conversation.service'
 import { GetMessage } from './decorators/get-message.decorator'
 import { getMessageType } from '../message/interfaces/message.interface'
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common'
 import { InformationService } from '../information/information.service'
 import { JwtService } from '@nestjs/jwt'
 import { Log } from '../common/logger'
@@ -11,10 +9,10 @@ import { SaveInformationDto } from '../information/dto/save.dto'
 import { SendMessageDto } from '../message/dto/send-message.dto'
 import { Server, Socket } from 'socket.io'
 import { UpdateConversationDto } from '../conversation/dto/update-conversation.dto'
+import { UseGuards } from '@nestjs/common'
 import { UserService } from '../user/user.service'
 import { WsGuard } from './guards/ws.guard'
 import {
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -51,8 +49,11 @@ export class ChatGateway
     const authToken: any = client.handshake.query.token;
     try {
       const id: number = this.jwtService.verify(authToken).id;
-      Log.log(ChatGateway.name, id.toString());
       const user = await this.userService.findById(id);
+      if (!user) {
+        client.disconnect(true);
+      }
+      Log.log(ChatGateway.name, `User id ${id} connected`);
       const info: SaveInformationDto = {
         userId: user.id,
         socketId: client.id,
@@ -60,9 +61,7 @@ export class ChatGateway
       await this.informationService.create(info);
       return { status: true };
     } catch (ex) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-    } finally {
-      return { status: false };
+      client.disconnect(true);
     }
   }
 
@@ -70,14 +69,12 @@ export class ChatGateway
     const authToken: any = client.handshake.query.token;
     try {
       const id: number = this.jwtService.verify(authToken).id;
-      Log.log(ChatGateway.name, id.toString());
+      Log.log(ChatGateway.name, `User id ${id} disconnected`);
       const user = await this.userService.findById(id);
       await this.informationService.deleteByValue(user.id, client.id);
       return { status: true };
     } catch (ex) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-    } finally {
-      return { status: false };
+      client.disconnect(true);
     }
   }
 

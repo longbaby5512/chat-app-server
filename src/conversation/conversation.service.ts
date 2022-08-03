@@ -1,11 +1,11 @@
-import { ConversationEntity } from './serializers/conversation.serializer'
-import { ConversationRepository } from './conversation.repository'
-import { CreateConversationDto } from './dto/create-conversation.dto'
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Log } from '../common/logger'
-import { UpdateConversationDto } from './dto/update-conversation.dto'
-import { UserService } from '../user/user.service'
+import { ConversationEntity } from './serializers/conversation.serializer';
+import { ConversationRepository } from './conversation.repository';
+import { CreateConversationDto } from './dto/create-conversation.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Log } from '../common/logger';
+import { UpdateConversationDto } from './dto/update-conversation.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ConversationService {
@@ -40,11 +40,9 @@ export class ConversationService {
     });
     Log.logObject(ConversationService.name, conversation);
     if (!conversation) {
-      const toUserName = await this.userService.findNameById(toUserId);
       const createConversation: CreateConversationDto = {
         userId,
         toUserId,
-        toUserName,
         content: inputs.content,
         type: inputs.type,
         timestamp: inputs.timestamp,

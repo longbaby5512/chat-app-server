@@ -27,12 +27,6 @@ export class Conversation implements IConversation {
   toUserId: number;
 
   @Column({
-    name: 'to_user_name',
-    nullable: false,
-  })
-  toUserName: string;
-
-  @Column({
     nullable: false,
   })
   content: string;
@@ -50,12 +44,4 @@ export class Conversation implements IConversation {
     default: () => 'CURRENT_TIMESTAMP',
   })
   timestamp: Date;
-
-  @ManyToOne(() => User, (user) => user.conversations, {
-    cascade: true,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
 }

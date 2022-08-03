@@ -1,14 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UserService } from '../../user/user.service';
+import { AuthPayload } from '../interfaces/auth-payload.interface';
 import { AuthService } from '../auth.service';
 import { ConfigService } from '@nestjs/config';
-import { throwNotFound } from 'src/common/utils';
-import { AuthPayload } from '../interfaces/auth-payload.interface';
-import { Request } from 'express';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Hashing } from 'src/common/hash';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Log } from '../../common/logger';
+import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
+import { throwNotFound } from 'src/common/utils';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(

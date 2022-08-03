@@ -1,16 +1,16 @@
-import { AuthPayload } from './interfaces/auth-payload.interface';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { Hashing } from '../common/hash';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { Log } from '../common/logger';
-import { LoginUserDto } from '../user/dto/login-user.dto';
-import { PostgresErrorCode } from '../database/error/postgres-error-code';
-import { throwNotFound, verifyPassword } from '../common/utils';
-import { UserService } from '../user/user.service';
-import { User } from '../user/entities/user.entity';
-import { ConfigService } from '@nestjs/config';
-import { UserEntity } from '../user/serializers/user.serializer';
+import { AuthPayload } from './interfaces/auth-payload.interface'
+import { ConfigService } from '@nestjs/config'
+import { CreateUserDto } from '../user/dto/create-user.dto'
+import { Hashing } from '../common/hash'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { JwtService, JwtSignOptions } from '@nestjs/jwt'
+import { Log } from '../common/logger'
+import { LoginUserDto } from '../user/dto/login-user.dto'
+import { PostgresErrorCode } from '../database/error/postgres-error-code'
+import { throwNotFound, verifyPassword } from '../common/utils'
+import { User } from '../user/entities/user.entity'
+import { UserEntity } from '../user/serializers/user.serializer'
+import { UserService } from '../user/user.service'
 
 @Injectable()
 export class AuthService {
@@ -24,12 +24,13 @@ export class AuthService {
     const email = inputs.email.toLowerCase().trim();
     const name = inputs.name;
     const hashPassword = await Hashing.hashing(inputs.password, email);
-    const create = { name, email, password: hashPassword };
+
+    const create = { name, email, password: hashPassword, key: inputs.key };
     try {
       const user = await this.userService.create(create);
       Log.log(AuthService.name, `User ${user.email} created`);
       throwNotFound(user, `User ${user.email} already exists`);
-      return user;
+      return;
     } catch (error) {
       if (error.code === PostgresErrorCode.UNIQUE_VIOLATION) {
         Log.error(
@@ -52,17 +53,21 @@ export class AuthService {
   async login(inputs: LoginUserDto) {
     const email = inputs.email.toLowerCase().trim();
     const user = await this.userService.findByEmail(email);
-    throwNotFound(user, `Email ${email} not found`);
+    if (!user) {
+      throw new HttpException(
+        'Email or password incorrect',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     await verifyPassword(inputs.password, user.password);
     const refreshToken = await this.generateRefreshToken(user.id);
     const refreshTokenHash = await Hashing.hashing(refreshToken, email);
     Log.logObject(AuthService.name, user);
-    const key = user.key || inputs.key;
 
     Log.log(AuthService.name, `User ${user.email} signed in`);
     const res = await this.userService.update(user, {
       id: user.id,
-      key,
+      key: user.key,
       name: user.name,
       email: user.email,
       password: user.password,

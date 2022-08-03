@@ -1,4 +1,4 @@
-import { MessageType } from '../../message/interfaces/message.interface'
+import { MessageType } from '../../message/interfaces/message.interface';
 
 export interface UpdateConversationDto {
   content: string;

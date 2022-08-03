@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { getMessageType } from '../../message/interfaces/message.interface';
+import { InformationService } from '../../information/information.service';
 import { JwtService } from '@nestjs/jwt';
 import { Log } from '../../common/logger';
 import { SendMessageDto } from '../../message/dto/send-message.dto';
@@ -12,6 +13,7 @@ export class WsGuard implements CanActivate {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly informationService: InformationService,
   ) {}
   async canActivate(
     context: ExecutionContext,
@@ -21,7 +23,6 @@ export class WsGuard implements CanActivate {
     try {
       const decoded = this.jwtService.verify(authToken);
       const user = await this.userService.findById(decoded.id);
-      throwNotFound(user, 'User not found');
       const data = context.switchToWs().getData();
       data.from = user.id;
       data.to = data.to;

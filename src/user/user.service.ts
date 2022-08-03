@@ -30,7 +30,7 @@ export class UserService {
   }
 
   async create(inputs: any) {
-    // Log.logObject(UserService.name, inputs);
+    Log.logObject(UserService.name, inputs);
     return await this.userRepository.createEntity(inputs);
   }
 
