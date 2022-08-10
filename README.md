@@ -1,73 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Chat Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Application, framework, and technology
+- PostgreSQL: [PostgreSQL](https://www.postgresql.org/) version 14.4 downloaded from https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+- Node.js: [Node.js](https://nodejs.org/) version v16.15.1 downloaded from https://nodejs.org/en/download
+- Yarn: [Yarn](https://yarnpkg.com/) installed by command `npm install --global yarn`
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a chat server that allows users to connect to it and send messages to each other.
+
+Clone the repository:
+
+```bash
+$ git clone 
 
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
+
+## Before run the server
+
+Create environment variables (.env) file:
+
+```bash
+NODE_ENV=development
+
+## DATABASE ##
+DB_HOST = localhost
+DB_PORT = 5432
+DB_USERNAME = ## your username ##
+DB_PASSWORD = ## password of postgres ##
+DB_DATABASE = ## your database name ##
+
+## JWT ##
+JWT_SECRET = ## your secret for jwt ##
+JWT_EXPIRES_IN = ## your expires in. Example: 259200 ##
+
+JWT_ALGORITHM = HS256
+JWT_REFRESH_SECRET = ## your secret for jwt refresh ##
+JWT_REFRESH_EXPIRES_IN = ## your expires in. Example: 604800 ##
+```
+
+If run in development mode, you must migrate the database:
+
+```bash
+yarn typeorm:run
+```
+
+After migrate the database, you can check the database has 5 tables: <i><b>migrations, users, messages, conversations, infomations</b></i>.
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn start
 
 # watch mode
-$ npm run start:dev
+$ yarn start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn start:prod
 ```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 ## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Facebook: [Long Nguyen Van](https://www.facebook.com/longkenvy)
+- Github: [Nguyễn Văn Long](https://github.com/longbaby5512)
+- Email: [long.nv120900@gmail.com](mailto:long.nv120900@gmail.com)
+- Linkedin: [Nguyễn Văn Long](https://www.linkedin.com/in/nguyenvanlong)
+- Phone: [+84 972 976 843](tel:+84972976843)
